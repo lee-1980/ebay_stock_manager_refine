@@ -39,6 +39,7 @@ const Form = ({
                     onSubmit={handleSubmit(onFinishHandler)}
                 >
                     <FormControl>
+
                         <FormHelperText
                             sx={{
                                 fontWeight: 500,
@@ -48,7 +49,9 @@ const Form = ({
                             }}
                         >
                             Enter property name
+
                         </FormHelperText>
+
                         <TextField
                             fullWidth
                             required
@@ -56,7 +59,9 @@ const Form = ({
                             color="info"
                             variant="outlined"
                             {...register("title", { required: true })}
+                            sx={{ input: { color: "#11142d" } }}
                         />
+
                     </FormControl>
                     <FormControl>
                         <FormHelperText
@@ -81,7 +86,7 @@ const Form = ({
                                 borderColor: "rgba(0,0,0,0.23)",
                                 borderRadius: 6,
                                 padding: 10,
-                                color: "#919191",
+                                color: "#11142d",
                             }}
                             {...register("description", { required: true })}
                         />
@@ -89,6 +94,7 @@ const Form = ({
 
                     <Stack direction="row" gap={4}>
                         <FormControl sx={{ flex: 1 }}>
+
                             <FormHelperText
                                 sx={{
                                     fontWeight: 500,
@@ -99,6 +105,7 @@ const Form = ({
                             >
                                 Select Property Type
                             </FormHelperText>
+
                             <Select
                                 variant="outlined"
                                 color="info"
@@ -109,6 +116,7 @@ const Form = ({
                                 {...register("propertyType", {
                                     required: true,
                                 })}
+                                sx={{ input: { color: "#11142d" } }}
                             >
                                 <MenuItem value="apartment">Apartment</MenuItem>
                                 <MenuItem value="villa">Villa</MenuItem>
@@ -118,7 +126,9 @@ const Form = ({
                                 <MenuItem value="duplex">Duplex</MenuItem>
                                 <MenuItem value="studio">Studio</MenuItem>
                                 <MenuItem value="chalet">Chalet</MenuItem>
+
                             </Select>
+
                         </FormControl>
                         <FormControl>
                             <FormHelperText
@@ -139,6 +149,7 @@ const Form = ({
                                 type="number"
                                 variant="outlined"
                                 {...register("price", { required: true })}
+                                sx={{ input: { color: "#11142d" } }}
                             />
                         </FormControl>
                     </Stack>
@@ -161,6 +172,7 @@ const Form = ({
                             color="info"
                             variant="outlined"
                             {...register("location", { required: true })}
+                            sx={{ input: { color: "#11142d" } }}
                         />
                     </FormControl>
 

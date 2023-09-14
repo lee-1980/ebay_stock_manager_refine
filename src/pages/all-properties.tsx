@@ -1,5 +1,5 @@
 import Add from "@mui/icons-material/Add";
-import { useTable } from "@refinedev/core";
+import { useTable, useImport } from "@refinedev/core";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
@@ -25,6 +25,22 @@ const AllProperties = () => {
         filters,
         setFilters,
     } = useTable();
+
+    const importProps = useImport<IPostFile>({
+        mapData: (item) => {
+            return {
+                title: item.title,
+                content: item.content,
+                status: item.status,
+                category: {
+                    id: item.categoryId,
+                },
+                user: {
+                    id: item.userId,
+                },
+            };
+        },
+    });
 
     const allProperties = data?.data ?? [];
 
@@ -222,5 +238,15 @@ const AllProperties = () => {
         </Box>
     );
 };
+
+
+interface IPostFile {
+    id: number;
+    title: string;
+    content: string;
+    userId: number;
+    categoryId: number;
+    status: "published" | "draft" | "rejected";
+}
 
 export default AllProperties;

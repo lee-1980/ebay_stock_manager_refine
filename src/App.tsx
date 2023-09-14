@@ -1,7 +1,6 @@
 import React from "react";
 
 import {
-    GitHubBanner,
     Refine,
     LegacyAuthProvider as AuthProvider,
 } from "@refinedev/core";
@@ -13,11 +12,9 @@ import {
 } from "@refinedev/mui";
 import CssBaseline from "@mui/material/CssBaseline";
 import GlobalStyles from "@mui/material/GlobalStyles";
-import AccountCircleOutlined from "@mui/icons-material/AccountCircleOutlined";
-import ChatBubbleOutline from "@mui/icons-material/ChatBubbleOutline";
-import PeopleAltOutlined from "@mui/icons-material/PeopleAltOutlined";
-import StarOutlineRounded from "@mui/icons-material/StarOutlineRounded";
-import VillaOutlined from "@mui/icons-material/VillaOutlined";
+
+import InventoryIcon from '@mui/icons-material/Inventory';
+import WebStoriesIcon from '@mui/icons-material/WebStories';
 
 import dataProvider from "@refinedev/simple-rest";
 import routerProvider from "@refinedev/react-router-v6/legacy";
@@ -30,14 +27,11 @@ import { parseJwt } from "utils/parse-jwt";
 import {
     Login,
     Home,
-    Agents,
-    MyProfile,
-    PropertyDetails,
-    AllProperties,
-    CreateProperty,
-    AgentProfile,
-    EditProperty,
 } from "pages";
+
+import { FebestList, FebestEdit, FebestCreate } from "./pages/febest";
+import { AutoplusList, AutoplusEdit, AutoplusCreate } from "./pages/autoplus";
+import { LogList } from "./pages/logs";
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((request: AxiosRequestConfig) => {
@@ -126,7 +120,6 @@ function App() {
 
     return (
         <ColorModeContextProvider>
-            <GitHubBanner />
             <CssBaseline />
             <GlobalStyles styles={{ html: { WebkitFontSmoothing: "auto" } }} />
             <RefineSnackbarProvider>
@@ -137,35 +130,24 @@ function App() {
                     catchAll={<ErrorComponent />}
                     resources={[
                         {
-                            name: "properties",
-                            list: AllProperties,
-                            show: PropertyDetails,
-                            create: CreateProperty,
-                            edit: EditProperty,
-                            icon: <VillaOutlined />,
+                            name: "Febest",
+                            list: FebestList,
+                            create: FebestCreate,
+                            edit: FebestEdit,
+                            icon: <InventoryIcon/>,
                         },
                         {
-                            name: "agents",
-                            list: Agents,
-                            show: AgentProfile,
-                            icon: <PeopleAltOutlined />,
+                            name: "Autoplus",
+                            list: AutoplusList,
+                            create: AutoplusCreate,
+                            edit: AutoplusEdit,
+                            icon: <InventoryIcon/>,
                         },
                         {
-                            name: "reviews",
-                            list: Home,
-                            icon: <StarOutlineRounded />,
-                        },
-                        {
-                            name: "messages",
-                            list: Home,
-                            icon: <ChatBubbleOutline />,
-                        },
-                        {
-                            name: "my-profile",
-                            options: { label: "My Profile " },
-                            list: MyProfile,
-                            icon: <AccountCircleOutlined />,
-                        },
+                            name: "Logs",
+                            list: LogList,
+                            icon: <WebStoriesIcon/>,
+                        }
                     ]}
                     Title={Title}
                     Sider={Sider}

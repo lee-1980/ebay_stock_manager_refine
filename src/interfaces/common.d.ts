@@ -41,3 +41,5 @@ export interface FormProps {
     onFinishHandler: (data: FieldValues) => Promise<void> | void;
     propertyImage: { name: string; url: string };
 }
+
+

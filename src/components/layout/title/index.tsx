@@ -2,7 +2,7 @@ import React from "react";
 import { useRouterContext, TitleProps } from "@refinedev/core";
 import Button from "@mui/material/Button";
 
-import { logo, yariga } from "assets";
+import { logo } from "../../../assets";
 
 export const Title: React.FC<TitleProps> = ({ collapsed }) => {
     const { Link } = useRouterContext();
@@ -13,7 +13,7 @@ export const Title: React.FC<TitleProps> = ({ collapsed }) => {
                 {collapsed ? (
                     <img src={logo} alt="Yariga" width="28px" />
                 ) : (
-                    <img src={yariga} alt="Refine" width="140px" />
+                    <img src={logo} alt="Refine" width="140px" />
                 )}
             </Link>
         </Button>

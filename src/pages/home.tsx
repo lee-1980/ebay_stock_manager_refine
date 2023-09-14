@@ -2,27 +2,56 @@ import { useList } from "@refinedev/core";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import React, { useState } from 'react';
 
 import {
-    PieChart,
-    PropertyReferrals,
-    TotalRevenue,
-    PropertyCard,
+    PieChart
 } from "components";
+import {Switch} from "@mui/material";
+
 
 const Home = () => {
-    const { data, isLoading, isError } = useList({
-        resource: "properties",
-        config: {
-            pagination: {
-                pageSize: 4,
+
+    const [checked, setChecked] = useState(false);
+    const [isError, setIsError] = useState(false);
+    const [febestCount, setFebestCount] = useState(0);
+    const [autoplusCount, setAutoplusCount] = useState(0);
+
+    React.useEffect(() => {
+
+        fetch("http://localhost:8080/api/v1/home")
+            .then(res => res.json())
+            .then(  ({febestCount, autoplusCount, serverOn}) => {
+                setChecked(serverOn);
+                setFebestCount(febestCount);
+                setAutoplusCount(autoplusCount);
+            })
+            .catch( error => setIsError(true));
+
+    }, []);
+
+
+
+    const switchHandler = async (event : React.ChangeEvent<HTMLInputElement>) => {
+        const response = await fetch(
+            "http://localhost:8080/api/v1/home/serverOnAndOff",
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    serverOn: !event.target.checked,
+                    verify: "854638322910-n081u1mlec3rr34oqs6d1g8tssdnkgfq",
+                }),
             },
-        },
-    });
+        );
 
-    const latestProperties = data?.data ?? [];
+        if (response.status === 200) {
+            setChecked(!event.target.checked)
+        } else {
+            return Promise.reject();
+        }
+    };
 
-    if (isLoading) return <Typography>Loading...</Typography>;
     if (isError) return <Typography>Something went wrong!</Typography>;
 
     return (
@@ -33,29 +62,18 @@ const Home = () => {
 
             <Box mt="20px" display="flex" flexWrap="wrap" gap={4}>
                 <PieChart
-                    title="Properties for Sale"
-                    value={684}
-                    series={[75, 25]}
+                    title="Febest Australia"
+                    value={febestCount}
+                    series={[febestCount, autoplusCount]}
                     colors={["#275be8", "#c4e8ef"]}
                 />
                 <PieChart
-                    title="Properties for Rent"
-                    value={550}
-                    series={[60, 40]}
+                    title="AutoPlusParts"
+                    value={autoplusCount}
+                    series={[autoplusCount, febestCount]}
                     colors={["#275be8", "#c4e8ef"]}
                 />
-                <PieChart
-                    title="Total customers"
-                    value={5684}
-                    series={[75, 25]}
-                    colors={["#275be8", "#c4e8ef"]}
-                />
-                <PieChart
-                    title="Properties for Cities"
-                    value={555}
-                    series={[75, 25]}
-                    colors={["#275be8", "#c4e8ef"]}
-                />
+
             </Box>
 
             <Stack
@@ -64,40 +82,26 @@ const Home = () => {
                 direction={{ xs: "column", lg: "row" }}
                 gap={4}
             >
-                <TotalRevenue />
-                <PropertyReferrals />
+                <Box
+                    p={4}
+                    flex={1}
+                    bgcolor="#fcfcfc"
+                    id="chart"
+                    display="flex"
+                    flexDirection="column"
+                    borderRadius="15px"
+                >
+                    <Typography fontSize={18} fontWeight={600} color="#11142d">
+                        System Power Off | On
+                    </Typography>
+
+                    <Stack my="20px" direction="row" gap={4} flexWrap="wrap">
+                        <Switch color="primary" checked={checked} onChange={switchHandler}  />
+                    </Stack>
+
+                </Box>
             </Stack>
 
-            <Box
-                flex={1}
-                borderRadius="15px"
-                padding="20px"
-                bgcolor="#fcfcfc"
-                display="flex"
-                flexDirection="column"
-                minWidth="100%"
-                mt="25px"
-            >
-                <Typography fontSize="18px" fontWeight={600} color="#11142d">
-                    Latest Properties
-                </Typography>
-
-                <Box
-                    mt={2.5}
-                    sx={{ display: "flex", flexWrap: "wrap", gap: 4 }}
-                >
-                    {latestProperties.map((property) => (
-                        <PropertyCard
-                            key={property._id}
-                            id={property._id}
-                            title={property.title}
-                            location={property.location}
-                            price={property.price}
-                            photo={property.photo}
-                        />
-                    ))}
-                </Box>
-            </Box>
         </Box>
     );
 };
