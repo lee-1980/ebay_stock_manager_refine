@@ -11,6 +11,7 @@ export interface IPost {
     item_number: string;
     csku: string;
     fsku: string;
+    combined: boolean;
 }
 
 export interface ILog {

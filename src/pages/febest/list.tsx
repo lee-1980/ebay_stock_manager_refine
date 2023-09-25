@@ -7,22 +7,30 @@ import {
     CreateButton,
     List,
     ImportButton,
+    BooleanField
 } from "@refinedev/antd";
 
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import { Space, Table } from "antd";
-
+import { Space, Table, Modal } from "antd";
+import Button from "@mui/material/Button";
 import { IPost, IPostFile } from "../../interfaces";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
 import { useMemo } from "react";
 
+import DeleteOutline from "@mui/icons-material/DeleteOutline";
+import {ButtonBase} from "@mui/material";
+
 const FebestList = () => {
 
 
     const { tableProps, tableQueryResult: { data, isLoading, isError } , filters,  setFilters,} = useTable<IPost>();
+
+    const TrueIcon = () => <span>✅</span>;
+
+    const FalseIcon = () => <span>❌</span>;
 
     const [total, setTotal] = React.useState(0);
     const [processed, setProcessed] = React.useState(0);
@@ -34,7 +42,8 @@ const FebestList = () => {
             return {
                 item_number: item.item_number,
                 csku: item.csku,
-                fsku: item.fsku
+                fsku: item.fsku,
+                combined: false
             };
         },
         onProgress: ({ totalAmount, processedAmount }) => {
@@ -60,6 +69,15 @@ const FebestList = () => {
         };
     }, [filters]);
 
+    const handleDelete = () => {
+        console.log("delete");
+        Modal.confirm({
+            title: "Are you sure? you want to delete All records?",
+            onOk: () => {
+
+            }
+        })
+    }
 
 
     if (isLoading) return <Typography>Loading...</Typography>;
@@ -116,10 +134,23 @@ const FebestList = () => {
             title={""}
             headerButtons={
                 <Space>
-                    <span>{ isImportLoading?`${processed}/${total}`:''}</span>
-                <ImportButton {...importProps} />
-
-                <CreateButton />
+                    <span>{isImportLoading ? `${processed}/${total}` : ''}</span>
+                    <ImportButton {...importProps} />
+                    <CreateButton/>
+                    <Button
+                        onClick={handleDelete}
+                        startIcon={<DeleteOutline />}
+                        sx={{
+                            flex: "unset",
+                            width: "fit-content",
+                            color: "#ff3b3b",
+                            textTransform: "capitalize",
+                            border: "1px solid #ff3b3b",
+                            height: "32px",
+                        }}
+                    >
+                        Delete All
+                    </Button>
                 </Space>
             }
             wrapperProps={{
@@ -134,6 +165,18 @@ const FebestList = () => {
                 <Table.Column dataIndex="item_number" title="Item Number" />
                 <Table.Column dataIndex="csku" title="Custom Label(SKU)" />
                 <Table.Column dataIndex="fsku" title="Febest SKU" />
+                <Table.Column dataIndex="combined"
+                              title="Is Custom SKU?"
+                              render={(value) => (
+                                  <BooleanField
+                                      value={value}
+                                      trueIcon={<TrueIcon />}
+                                      falseIcon={<FalseIcon />}
+                                      valueLabelTrue="True"
+                                      valueLabelFalse="False"
+                                  />
+                              )}
+                />
                 <Table.Column<IPost>
                     title="Actions"
                     dataIndex="actions"

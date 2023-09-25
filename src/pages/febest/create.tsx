@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm, Create } from "@refinedev/antd";
-import { Form, Input } from "antd";
+import { Form, Input , Checkbox} from "antd";
 
 import { IPost } from "../../interfaces";
 
@@ -43,6 +43,14 @@ const FebestCreate = () => {
                     ]}
                 >
                     <Input />
+                </Form.Item>
+
+                <Form.Item
+                    label="Is Custom SKU"
+                    name="combined"
+                    valuePropName = "checked"
+                >
+                    <Checkbox />
                 </Form.Item>
             </Form>
         </Create>

@@ -1,6 +1,6 @@
 import React from "react";
 import { Edit, useForm } from "@refinedev/antd";
-import { Form, Input, Select } from "antd";
+import {Checkbox, Form, Input, Select} from "antd";
 
 import { IPost } from "../../interfaces";
 
@@ -44,6 +44,14 @@ const FebestEdit = () => {
                     ]}
                 >
                     <Input />
+                </Form.Item>
+
+                <Form.Item
+                    label="Is Custom SKU"
+                    name="combined"
+                    valuePropName = "checked"
+                >
+                    <Checkbox />
                 </Form.Item>
             </Form>
         </Edit>

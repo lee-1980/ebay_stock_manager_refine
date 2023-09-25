@@ -5,7 +5,7 @@ import {
     EditButton,
     DeleteButton,
     List,
-    ImportButton, CreateButton,
+    ImportButton, CreateButton, BooleanField
 } from "@refinedev/antd";
 
 import TextField from "@mui/material/TextField";
@@ -21,6 +21,10 @@ const AutoplusList = () => {
 
     const { tableProps, tableQueryResult: { data, isLoading, isError } , filters,  setFilters,} = useTable<IPost>();
 
+    const TrueIcon = () => <span>✅</span>;
+
+    const FalseIcon = () => <span>❌</span>;
+
     const [total, setTotal] = React.useState(0);
     const [processed, setProcessed] = React.useState(0);
     const [isImportLoading, setisImportLoading ] = React.useState(false);
@@ -30,7 +34,8 @@ const AutoplusList = () => {
             return {
                 item_number: item.item_number,
                 csku: item.csku,
-                fsku: item.fsku
+                fsku: item.fsku,
+                combined: false
             };
         },
         onProgress: ({ totalAmount, processedAmount }) => {
@@ -127,6 +132,18 @@ const AutoplusList = () => {
                     <Table.Column dataIndex="item_number" title="Item Number" />
                     <Table.Column dataIndex="csku" title="Custom Label(SKU)" />
                     <Table.Column dataIndex="fsku" title="Febest SKU" />
+                    <Table.Column dataIndex="combined"
+                                  title="Is Custom SKU?"
+                                  render={(value) => (
+                                      <BooleanField
+                                          value={value}
+                                          trueIcon={<TrueIcon />}
+                                          falseIcon={<FalseIcon />}
+                                          valueLabelTrue="True"
+                                          valueLabelFalse="False"
+                                      />
+                                  )}
+                    />
                     <Table.Column<IPost>
                         title="Actions"
                         dataIndex="actions"

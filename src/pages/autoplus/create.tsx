@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm, Create } from "@refinedev/antd";
-import { Form, Input } from "antd";
+import {Checkbox, Form, Input} from "antd";
 
 import { IPost } from "../../interfaces";
 
@@ -44,6 +44,15 @@ const AutoplusCreate = () => {
                 >
                     <Input />
                 </Form.Item>
+
+                <Form.Item
+                    label="Is Custom SKU"
+                    name="combined"
+                    valuePropName = "checked"
+                >
+                    <Checkbox />
+                </Form.Item>
+
             </Form>
         </Create>
     );
