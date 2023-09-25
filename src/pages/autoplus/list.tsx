@@ -10,16 +10,19 @@ import {
 
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import { Space, Table } from "antd";
+import {Modal, Space, Table} from "antd";
 
 import { IPost, IPostFile } from "../../interfaces";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import React, { useMemo } from "react";
+import DeleteOutline from "@mui/icons-material/DeleteOutline";
+import Button from "@mui/material/Button";
+import {apiWrapper} from "../../utils/api";
 
 const AutoplusList = () => {
 
-    const { tableProps, tableQueryResult: { data, isLoading, isError } , filters,  setFilters,} = useTable<IPost>();
+    const { tableProps, tableQueryResult: { data, isLoading, isError , refetch} , filters,  setFilters,} = useTable<IPost>();
 
     const TrueIcon = () => <span>✅</span>;
 
@@ -60,6 +63,27 @@ const AutoplusList = () => {
                 ""
         };
     }, [filters]);
+
+    const handleDelete = () => {
+        Modal.confirm({
+            title: "Are you sure? you want to delete All records?",
+            onOk: async () => {
+                let response = await apiWrapper("Autoplus/deleteAll", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        verify: "854638322910-n081u1mlec3rr34oqs6d1g8tssdnkgfq",
+                    }),
+                });
+
+                if (response.status === 200) {
+                    await refetch();
+                } else {
+                    return Promise.reject();
+                }
+            }
+        })
+    }
 
     if (isLoading) return <Typography>Loading...</Typography>;
     if (isError) return <Typography>Error...</Typography>;
@@ -116,8 +140,21 @@ const AutoplusList = () => {
                     <Space>
                         <span>{ isImportLoading?`${processed}/${total}`:''}</span>
                         <ImportButton {...importProps} />
-
                         <CreateButton />
+                        <Button
+                            onClick={handleDelete}
+                            startIcon={<DeleteOutline />}
+                            sx={{
+                                flex: "unset",
+                                width: "fit-content",
+                                color: "#ff3b3b",
+                                textTransform: "capitalize",
+                                border: "1px solid #ff3b3b",
+                                height: "32px",
+                            }}
+                        >
+                            Delete All
+                        </Button>
                     </Space>
                 }
                 wrapperProps={{

@@ -21,12 +21,12 @@ import Typography from "@mui/material/Typography";
 import { useMemo } from "react";
 
 import DeleteOutline from "@mui/icons-material/DeleteOutline";
-import {ButtonBase} from "@mui/material";
+import {apiWrapper} from "../../utils/api";
 
 const FebestList = () => {
 
 
-    const { tableProps, tableQueryResult: { data, isLoading, isError } , filters,  setFilters,} = useTable<IPost>();
+    const { tableProps, tableQueryResult: { data, isLoading, isError, refetch } , filters,  setFilters,} = useTable<IPost>();
 
     const TrueIcon = () => <span>✅</span>;
 
@@ -70,11 +70,22 @@ const FebestList = () => {
     }, [filters]);
 
     const handleDelete = () => {
-        console.log("delete");
         Modal.confirm({
             title: "Are you sure? you want to delete All records?",
-            onOk: () => {
+            onOk: async () => {
+                let response = await apiWrapper("febest/deleteAll", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        verify: "854638322910-n081u1mlec3rr34oqs6d1g8tssdnkgfq",
+                    }),
+                });
 
+                if (response.status === 200) {
+                    await refetch();
+                } else {
+                    return Promise.reject();
+                }
             }
         })
     }
