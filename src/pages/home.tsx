@@ -28,7 +28,6 @@ const Home = () => {
         apiWrapper('home', null)
             .then(res => res.json())
             .then(  ({febestCount, autoplusCount, serverOn, runTime, lastSyncTime}) => {
-                console.log(lastSyncTime)
                 setLastSync(dayjs(lastSyncTime, 'YYYY-MM-DD HH:mm:ss'));
                 setValue(dayjs(runTime, 'HH:mm:ss'));
                 setChecked(serverOn);
