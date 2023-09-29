@@ -15,6 +15,7 @@ import GlobalStyles from "@mui/material/GlobalStyles";
 
 import InventoryIcon from '@mui/icons-material/Inventory';
 import WebStoriesIcon from '@mui/icons-material/WebStories';
+import ReceiptIcon from '@mui/icons-material/Receipt';
 
 import dataProvider from "@refinedev/simple-rest";
 import routerProvider from "@refinedev/react-router-v6/legacy";
@@ -32,6 +33,7 @@ import {
 import { FebestList, FebestEdit, FebestCreate } from "./pages/febest";
 import { AutoplusList, AutoplusEdit, AutoplusCreate } from "./pages/autoplus";
 import { LogList } from "./pages/logs";
+import {OrderList} from "./pages/orders";
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((request: AxiosRequestConfig) => {
@@ -144,10 +146,15 @@ function App() {
                             icon: <InventoryIcon/>,
                         },
                         {
+                            name: "Orders",
+                            list: OrderList,
+                            icon: <ReceiptIcon/>,
+                        },
+                        {
                             name: "Logs",
                             list: LogList,
                             icon: <WebStoriesIcon/>,
-                        }
+                        },
                     ]}
                     Title={Title}
                     Sider={Sider}
