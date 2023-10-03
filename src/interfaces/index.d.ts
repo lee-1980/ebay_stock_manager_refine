@@ -20,3 +20,10 @@ export interface ILog {
     description: string;
     date: string;
 }
+
+export interface IOrder {
+    _id: number;
+    orderId: string;
+    store: string;
+    date: string;
+}

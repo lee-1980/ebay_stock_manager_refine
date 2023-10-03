@@ -14,7 +14,7 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import { Space, Table, Modal } from "antd";
 import Button from "@mui/material/Button";
-import { IPost, IPostFile } from "../../interfaces";
+import { IOrder } from "../../interfaces";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
@@ -26,7 +26,7 @@ import {apiWrapper} from "../../utils/api";
 const OrderList = () => {
 
 
-    const { tableProps, tableQueryResult: { data, isLoading, isError, refetch } , filters,  setFilters,} = useTable<IPost>();
+    const { tableProps, tableQueryResult: { data, isLoading, isError, refetch } , filters,  setFilters,} = useTable<IOrder>();
 
 
     const allFebests = data?.data ?? [];
@@ -145,10 +145,11 @@ const OrderList = () => {
 
             >
                 <Table {...tableProps} rowKey="item_number">
-                    <Table.Column dataIndex="orderId" title="Item Number" />
-                    <Table.Column dataIndex="store" title="Custom Label(SKU)" />
-                    <Table.Column dataIndex="date" title="Febest SKU" />
-                    <Table.Column<IPost>
+                    <Table.Column dataIndex="orderId" title="Order ID" />
+                    <Table.Column dataIndex="saleReference" title="SaleReference Number"/>
+                    <Table.Column dataIndex="store" title="Store Type" />
+                    <Table.Column dataIndex="date" title="Date" />
+                    <Table.Column<IOrder>
                         title="Actions"
                         dataIndex="actions"
                         render={(_, record) => (
