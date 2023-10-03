@@ -76,8 +76,8 @@ const OrderList = () => {
 
                     <Typography fontSize={25} fontWeight={700} color="#FFF">
                         {!allFebests.length
-                            ? "There are no properties"
-                            : "All Febests"}
+                            ? "There are no record!"
+                            : `${allFebests.length} records`}
                     </Typography>
 
                     <Box
@@ -97,7 +97,7 @@ const OrderList = () => {
                             <TextField
                                 variant="outlined"
                                 color="info"
-                                placeholder="Search by Item Number"
+                                placeholder="Search by Order Number"
                                 value={currentFilterValues.item_number}
                                 onChange={(e) => {
                                     setFilters([

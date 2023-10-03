@@ -95,8 +95,8 @@ const AutoplusList = () => {
 
                     <Typography fontSize={25} fontWeight={700} color="#FFF">
                         {!allFebests.length
-                            ? "There are no properties"
-                            : "All Autopluss"}
+                            ? "There are no record!"
+                            : `${allFebests.length} records`}
                     </Typography>
 
                     <Box

@@ -101,8 +101,8 @@ const FebestList = () => {
 
                     <Typography fontSize={25} fontWeight={700} color="#FFF">
                         {!allFebests.length
-                            ? "There are no properties"
-                            : "All Febests"}
+                            ? "There are no record!"
+                            : `${allFebests.length} records`}
                     </Typography>
 
                     <Box
