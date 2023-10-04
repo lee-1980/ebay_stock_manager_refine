@@ -20,16 +20,18 @@ const Home = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [febestCount, setFebestCount] = useState(0);
     const [autoplusCount, setAutoplusCount] = useState(0);
-    const [value, setValue] = useState<Dayjs | null>(dayjs('00:00:01', 'HH:mm:ss'));
+    const [orderTimer, setOrderTimer] = useState<Dayjs | null>(dayjs('00:00:01', 'HH:mm:ss'));
+    const [stockTimer, setStockTimer] = useState<Dayjs | null>(dayjs('00:00:01', 'HH:mm:ss'));
     const [lastSync, setLastSync] = useState<Dayjs | null>(dayjs('1970-01-01 00:00:01', 'YYYY-MM-DD HH:mm:ss'));
 
     React.useEffect(() => {
         setIsLoading(true);
         apiWrapper('home', null)
             .then(res => res.json())
-            .then(  ({febestCount, autoplusCount, serverOn, runTime, lastSyncTime}) => {
+            .then(  ({febestCount, autoplusCount, serverOn, runTime, lastSyncTime, StockTime}) => {
                 setLastSync(dayjs(lastSyncTime, 'YYYY-MM-DD HH:mm:ss'));
-                setValue(dayjs(runTime, 'HH:mm:ss'));
+                setOrderTimer(dayjs(runTime, 'HH:mm:ss'));
+                setStockTimer(dayjs(StockTime, 'HH:mm:ss'));
                 setChecked(serverOn);
                 setFebestCount(febestCount);
                 setAutoplusCount(autoplusCount);
@@ -67,18 +69,31 @@ const Home = () => {
         setIsLoading(false);
     };
 
-    const onChange = async (time: Dayjs | null, timeString: string) => {
+    const onOrderTimeChange = async (time: Dayjs | null, timeString: string) => {
         setIsLoading(true);
 
         const response = await updateSetting('runTime', timeString);
         // after updating the database, update the state
         if (response.status === 200) {
-            setValue(time)
+            setOrderTimer(time)
         } else {
             return Promise.reject();
         }
         setIsLoading(false);
     };
+
+    const onStockTimeChange = async (time: Dayjs | null, timeString: string) => {
+        setIsLoading(true);
+
+        const response = await updateSetting('stockTime', timeString);
+        // after updating the database, update the state
+        if (response.status === 200) {
+            setStockTimer(time)
+        } else {
+            return Promise.reject();
+        }
+        setIsLoading(false);
+    }
 
     const onChangeDateTime = async (time: Dayjs | null, timeString: string) => {
         setIsLoading(true);
@@ -157,13 +172,29 @@ const Home = () => {
                     >
                         <Stack>
                             <Typography fontSize={18} fontWeight={600} color="#11142d">
-                                Cron Job Time.
+                                Cron Job Timer (Posting Orders from ebay to DataPel).
                             </Typography>
                             <Stack my="20px" direction="row" gap={4} flexWrap="wrap">
-                                <TimePicker allowClear={false} use12Hours={false} value={value} format="HH:mm:ss" onChange={onChange}/>
-                                <Button variant="contained" color="primary" onClick={() => onChange(dayjs().add(5, 'second'), dayjs().add(5, 'second').format('HH:mm:ss'))}>Force Run in 5 seconds</Button>
+                                <TimePicker allowClear={false} use12Hours={false} value={orderTimer} format="HH:mm:ss" onChange={onOrderTimeChange}/>
+                                <Button variant="contained" color="primary" onClick={() => onOrderTimeChange(dayjs().add(5, 'second'), dayjs().add(5, 'second').format('HH:mm:ss'))}>Force Run in 5 seconds</Button>
+                            </Stack>
+
+                            <Typography fontSize={18} fontWeight={600} color="#11142d">
+                                Last eBay Order Sync Time
+                            </Typography>
+                            <Stack my="20px" direction="row" gap={4} flexWrap="wrap">
+                                <DatePicker
+                                    format="YYYY-MM-DD HH:mm:ss"
+                                    value={lastSync}
+                                    onChange={onChangeDateTime}
+                                    showTime={{ use12Hours: false }}
+                                    allowClear={false}
+                                />
+                                <p style={{ color: "#fff" , backgroundColor: "#1677ff", borderRadius: "5px", padding: "10px 15px"}}>This value must not be later than the current time. This value is updated regularly when the "posting orders to datapel" job runs.</p>
                             </Stack>
                         </Stack>
+
+
                     </Box>
                     <Box
                         p={4}
@@ -177,17 +208,12 @@ const Home = () => {
                     >
                         <Stack>
                             <Typography fontSize={18} fontWeight={600} color="#11142d">
-                                Last eBay Order Sync Time
+                                Cron Job Timer (Stock Sync).
                             </Typography>
+
                             <Stack my="20px" direction="row" gap={4} flexWrap="wrap">
-                                <DatePicker
-                                    format="YYYY-MM-DD HH:mm:ss"
-                                    value={lastSync}
-                                    onChange={onChangeDateTime}
-                                    showTime={{ use12Hours: false }}
-                                    allowClear={false}
-                                />
-                                <p style={{ color: "#fff" , backgroundColor: "#1677ff", borderRadius: "5px", padding: "10px 15px"}}>This value must not be later than the current time. This value is updated regularly when the daily job runs.</p>
+                                <TimePicker allowClear={false} use12Hours={false} value={stockTimer} format="HH:mm:ss" onChange={onStockTimeChange}/>
+                                <Button variant="contained" color="primary" onClick={() => onStockTimeChange(dayjs().add(5, 'second'), dayjs().add(5, 'second').format('HH:mm:ss'))}>Force Run in 5 seconds</Button>
                             </Stack>
                         </Stack>
                     </Box>
