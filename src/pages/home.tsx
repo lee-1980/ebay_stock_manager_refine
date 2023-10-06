@@ -1,4 +1,3 @@
-import { useList } from "@refinedev/core";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -6,12 +5,14 @@ import React, { useState, useRef } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import  {Spin, TimePicker, DatePicker} from 'antd';
 import { apiWrapper } from "../utils/api";
+import io from "socket.io-client";
 import {
     PieChart
 } from "components";
 
 import {Button, Switch} from "@mui/material";
 
+let socket;
 
 const Home = () => {
     const ref = useRef();
@@ -21,11 +22,14 @@ const Home = () => {
     const [febestCount, setFebestCount] = useState(0);
     const [autoplusCount, setAutoplusCount] = useState(0);
     const [orderTimer, setOrderTimer] = useState<Dayjs | null>(dayjs('00:00:01', 'HH:mm:ss'));
+    const [stockMessage, setStockMessage] = useState<string>('Real Time Notification, Don\'t refresh the page while the system is running once click the Force Sync button');
+    const [orderMessage, setOrderMessage] = useState<string>('Real Time Notification, Don\'t refresh the page while the system is running once click the Force Sync button');
     const [stockTimer, setStockTimer] = useState<Dayjs | null>(dayjs('00:00:01', 'HH:mm:ss'));
     const [lastSync, setLastSync] = useState<Dayjs | null>(dayjs('1970-01-01 00:00:01', 'YYYY-MM-DD HH:mm:ss'));
 
     React.useEffect(() => {
         setIsLoading(true);
+
         apiWrapper('home', null)
             .then(res => res.json())
             .then(  ({febestCount, autoplusCount, serverOn, runTime, lastSyncTime, StockTime}) => {
@@ -38,6 +42,15 @@ const Home = () => {
                 setIsLoading(false);
             })
             .catch( error => setIsError(true));
+
+        socket = io('http://localhost:8000');
+
+        socket.on( 'stockMessage', (message : string) => {
+            setStockMessage(message);
+        })
+        socket.on( 'orderMessage', (message : string) => {
+            setOrderMessage(message);
+        });
 
     }, []);
 
@@ -178,6 +191,11 @@ const Home = () => {
                                 <TimePicker allowClear={false} use12Hours={false} value={orderTimer} format="HH:mm:ss" onChange={onOrderTimeChange}/>
                                 <Button variant="contained" color="primary" onClick={() => onOrderTimeChange(dayjs().add(5, 'second'), dayjs().add(5, 'second').format('HH:mm:ss'))}>Force Run in 5 seconds</Button>
                             </Stack>
+                            <Stack my="20px" direction="row" gap={4} flexWrap="wrap">
+                                <p style={{ color: "#fff" , backgroundColor: "#7c7eff", borderRadius: "5px", padding: "10px 15px", border: "2px double #cbb1ff"}}>
+                                {orderMessage}
+                                </p>
+                            </Stack>
 
                             <Typography fontSize={18} fontWeight={600} color="#11142d">
                                 Last eBay Order Sync Time
@@ -214,6 +232,12 @@ const Home = () => {
                             <Stack my="20px" direction="row" gap={4} flexWrap="wrap">
                                 <TimePicker allowClear={false} use12Hours={false} value={stockTimer} format="HH:mm:ss" onChange={onStockTimeChange}/>
                                 <Button variant="contained" color="primary" onClick={() => onStockTimeChange(dayjs().add(5, 'second'), dayjs().add(5, 'second').format('HH:mm:ss'))}>Force Run in 5 seconds</Button>
+                            </Stack>
+
+                            <Stack my="20px" direction="row" gap={4} flexWrap="wrap">
+                                <p style={{ color: "#fff" , backgroundColor: "#7c7eff", borderRadius: "5px", padding: "10px 15px", border: "2px double #cbb1ff"}}>
+                                {stockMessage}
+                                </p>
                             </Stack>
                         </Stack>
                     </Box>

@@ -116,7 +116,7 @@ const AutoplusList = () => {
                             <TextField
                                 variant="outlined"
                                 color="info"
-                                placeholder="Search by Item Number"
+                                placeholder="Search by Item Number or Custom Label(SKU)"
                                 value={currentFilterValues.item_number}
                                 onChange={(e) => {
                                     setFilters([
