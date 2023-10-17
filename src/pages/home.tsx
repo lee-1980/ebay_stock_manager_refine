@@ -59,6 +59,9 @@ const Home = () => {
         socket.on( 'orderMessage', (message : string) => {
             setOrderMessage(message);
         });
+        socket.on( 'lastAPICallTime', (lastSyncTime : string) => {
+            setLastSync(dayjs(lastSyncTime, 'YYYY-MM-DD HH:mm:ss'));
+        });
 
     }, []);
 
